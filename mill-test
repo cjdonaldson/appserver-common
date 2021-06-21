@@ -1,0 +1,8 @@
+#!/bin/bash
+
+#mill appserverCommon.scoverage.compile 
+mill "appserverCommon[2.12].test" && \
+mill "appserverCommon[2.12].scoverage.htmlReport" && \
+mill "appserverCommon[2.12].scoverage.consoleReport" && \
+find ./out -name index.html | ag scoverage | xargs -I {} firefox {} 
+
