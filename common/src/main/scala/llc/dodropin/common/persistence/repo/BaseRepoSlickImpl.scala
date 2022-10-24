@@ -3,11 +3,10 @@ package llc.dodropin.common.persistence.repo
 import llc.dodropin.common.Logging
 
 import scala.concurrent.Future
-import scala.language.reflectiveCalls
 import slick.lifted.TableQuery
 import slick.lifted.AbstractTable
 
-case class BaseRepoSlickImpl[ID, T <: AbstractTable[_]](
+case class BaseRepoSlickImpl[ID, T <: RepoId[ID] with AbstractTable[_]](
     val repoName: String,
     repo1: TableQuery[T]
 ) extends BaseRepo[ID, T]
@@ -21,7 +20,7 @@ case class BaseRepoSlickImpl[ID, T <: AbstractTable[_]](
   def get(id: ID): Future[T] =
     toFuture(repo.get(id))("Nothing found")
 
-  def add(t: TwithGetId): Future[T] = {
+  def add(t: T): Future[T] = {
     repo.get(t.id) match {
       case Some(_) =>
         val exception = RepositoryException.idExists(repoName, t.id)
@@ -35,7 +34,7 @@ case class BaseRepoSlickImpl[ID, T <: AbstractTable[_]](
     }
   }
 
-  def update(t: TwithGetId): Future[T] = toFuture {
+  def update(t: T): Future[T] = toFuture {
     repo.get(t.id).map { _ =>
       repo(t.id) = t
       t

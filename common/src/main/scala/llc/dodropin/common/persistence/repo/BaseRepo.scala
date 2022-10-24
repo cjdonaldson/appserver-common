@@ -13,8 +13,11 @@ object RepositoryException {
   def idExists[ID](repoName: String, id: ID): RepositoryException[ID] = new RepositoryException(repoName, Some(id), s"$id exists")
 }
 
-trait BaseRepo[ID, T] {
-  type TwithGetId = T { def id: ID }
+trait RepoId[ID] {
+  def id: ID
+}
+
+trait BaseRepo[ID, T <: RepoId[ID]] {
 
   val log: Logger
 
@@ -24,9 +27,9 @@ trait BaseRepo[ID, T] {
 
   def get(id: ID): Future[T]
 
-  def add(t: TwithGetId): Future[T]
+  def add(t: T): Future[T]
 
-  def update(t: TwithGetId): Future[T]
+  def update(t: T): Future[T]
 
   def remove(id: ID): Future[T]
 

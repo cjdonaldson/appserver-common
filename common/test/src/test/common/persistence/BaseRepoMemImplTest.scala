@@ -2,7 +2,7 @@ package llc.dodropin.common.persistence.repo
 
 import org.scalatest.funspec.AsyncFunSpec
 
-case class TestItem(val id: String, value: Int)
+case class TestItem(val id: String, value: Int) extends RepoId[String]
 
 class BaseRepoMemImplTest extends AsyncFunSpec {
   import BaseRepoMemImplTest._

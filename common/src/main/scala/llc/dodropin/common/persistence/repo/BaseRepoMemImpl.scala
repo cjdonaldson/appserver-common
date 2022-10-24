@@ -3,9 +3,8 @@ package llc.dodropin.common.persistence.repo
 import llc.dodropin.common.Logging
 
 import scala.concurrent.Future
-import scala.language.reflectiveCalls
 
-abstract case class BaseRepoMemImpl[ID, T](val repoName: String) extends BaseRepo[ID, T] with Logging {
+abstract case class BaseRepoMemImpl[ID, T <: RepoId[ID]](val repoName: String) extends BaseRepo[ID, T] with Logging {
   log.info(s"repo init for $repoName")
 
   private val repo = scala.collection.mutable.Map[ID, T]()
@@ -15,7 +14,7 @@ abstract case class BaseRepoMemImpl[ID, T](val repoName: String) extends BaseRep
   def get(id: ID): Future[T] =
     toFuture(repo.get(id))("Nothing found")
 
-  def add(t: TwithGetId): Future[T] = {
+  def add(t: T): Future[T] = {
     log.debug(s"Adding ${t}")
     repo.get(t.id) match {
       case Some(_) =>
@@ -29,7 +28,7 @@ abstract case class BaseRepoMemImpl[ID, T](val repoName: String) extends BaseRep
     }
   }
 
-  def update(t: TwithGetId): Future[T] =
+  def update(t: T): Future[T] =
     toFuture(
       repo.get(t.id).map { _ =>
         repo(t.id) = t
