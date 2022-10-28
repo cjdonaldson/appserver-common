@@ -9,7 +9,7 @@ abstract case class BaseRepoMemImpl[ID, T <: RepoId[ID]](val repoName: String) e
 
   private val repo = scala.collection.mutable.Map[ID, T]()
 
-  def getAll: Future[Seq[T]] = Future.successful(repo.values.toSeq)
+  def getAll: Future[List[T]] = Future.successful(repo.values.toList)
 
   def get(id: ID): Future[T] =
     toFuture(repo.get(id))("Nothing found")

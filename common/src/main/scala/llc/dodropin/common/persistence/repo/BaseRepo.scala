@@ -23,7 +23,7 @@ trait BaseRepo[ID, T <: RepoId[ID]] {
 
   def repoName: String
 
-  def getAll: Future[Seq[T]]
+  def getAll: Future[List[T]]
 
   def get(id: ID): Future[T]
 

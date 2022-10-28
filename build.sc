@@ -130,7 +130,6 @@ class Common(val crossScalaVersion: String) extends CrossScalaModule with BasePr
     ivyCommonDeps ++
       ivyAkkaDeps ++
       ivyCirceDeps ++
-      ivySlickDbDeps ++
       Agg(
         ivy"commons-codec:commons-codec:1.15"
       )
@@ -180,15 +179,6 @@ object CommonConfig {
     )
   }
 
-  val ivySlickDbDeps = {
-    val slickVersion = "3.3.3"
-    Agg(
-      // ivy"com.zaxxer:HikariCP:2.6.3",
-      ivy"com.typesafe.slick::slick:$slickVersion",
-      ivy"com.typesafe.slick::slick-hikaricp:$slickVersion",
-      ivy"mysql:mysql-connector-java:6.0.6"
-    )
-  }
 
   def ivyJwt = 
     Agg(
