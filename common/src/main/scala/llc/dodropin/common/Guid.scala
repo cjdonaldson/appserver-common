@@ -43,6 +43,11 @@ object GuidMethod {
 
 case class Guid private (val value: String) //extends AnyVal
 {
+  // override def equals(that: Any): Boolean = that match {
+  //   case Guid(value) => this.value == value
+  //   case _ => false
+  // }
+
   override def toString = value
 }
 

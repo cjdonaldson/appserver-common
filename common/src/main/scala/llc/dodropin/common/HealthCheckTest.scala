@@ -25,7 +25,7 @@ object HealthCheckTest extends App {
         log = NOPLogger.NOP_LOGGER
         None
 
-      case s => 
+      case s =>
         Some(s)
     }
 
@@ -48,16 +48,15 @@ object HealthCheckTest extends App {
       _ = log.info(body.utf8String)
     } yield if (resp.status.isSuccess) Passed else Failed
 
-  argsList
-    .headOption
+  argsList.headOption
     .map(healthTest)
     .getOrElse(Future.successful(Failed))
-    .onComplete{
-      case Success(value) => 
+    .onComplete {
+      case Success(value) =>
         log.info(s"HealthCheck done: $value")
         sys.exit(value.value)
-      
-      case Failure(_) => 
+
+      case Failure(_) =>
         sys.exit(Failed.value)
     }
 }

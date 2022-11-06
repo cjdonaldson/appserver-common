@@ -1,4 +1,4 @@
-package llc.dodropin.common.config
+package llc.dodropin.common
 
 import javax.inject.Singleton
 

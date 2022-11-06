@@ -136,7 +136,7 @@ class Common(val crossScalaVersion: String) extends CrossScalaModule with BasePr
 
   def scalacOptions = scalacCommonOptions
 
-  object test extends BaseTestModule {
+  object test extends CrossScalaModuleTests with BaseTestModule {
     def ivyDeps = ivyTestDeps ++
       ivyAkkaTestDeps
   }

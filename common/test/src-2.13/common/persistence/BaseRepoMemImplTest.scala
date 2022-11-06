@@ -1,25 +1,27 @@
 package llc.dodropin.common.persistence.repo
 
 import org.scalatest.funspec.AsyncFunSpec
+import scala.concurrent.Future
 
 case class TestItem(val id: String, value: Int) extends RepoId[String]
 
 class BaseRepoMemImplTest extends AsyncFunSpec {
   import BaseRepoMemImplTest._
 
-  class testRepo extends BaseRepoMemImpl[String, TestItem]("test")
-  def getTestRepo: BaseRepo[String, TestItem] = new testRepo
+  class testRepo extends BaseRepoMemImpl[String, TestItem, Future]("test") with BaseRepoSyntaxFuture[TestItem]
+
+  def getTestRepo: BaseRepo[String, TestItem, Future] = new testRepo
 
   describe("BaseRepo") {
     it("should start empty") {
       val testRepo = getTestRepo
-      testRepo.getAll.map(r => assert(r.isEmpty))
+      testRepo.getAll.map(_.iterator.toList).map(r => assert(r.isEmpty))
     }
 
     it("should add one user") {
       val testRepo = getTestRepo
       testRepo.add(item1).map(r => assert(r.equals(item1)))
-      testRepo.getAll.map { users =>
+      testRepo.getAll.map(_.iterator.toList).map { users =>
         assert(users.nonEmpty)
         assert(users.head.equals(item1))
       }
@@ -29,7 +31,7 @@ class BaseRepoMemImplTest extends AsyncFunSpec {
       val testRepo = getTestRepo
       testRepo.add(item1).map(r => assert(r.equals(item1)))
       testRepo.add(item2).map(r => assert(r.equals(item2)))
-      testRepo.getAll.map { users =>
+      testRepo.getAll.map(_.iterator.to(List)).map { users =>
         assert(users.nonEmpty)
         assert(users.find(_ == item1).isDefined)
         assert(users.find(_ == item2).isDefined)
@@ -39,14 +41,14 @@ class BaseRepoMemImplTest extends AsyncFunSpec {
     it("should remove one user") {
       val testRepo = getTestRepo
       testRepo.add(item1).map(r => assert(r.equals(item1)))
-      testRepo.getAll.map { users =>
+      testRepo.getAll.map(_.iterator.toList).map { users =>
         assert(users.nonEmpty)
-        assert(users.head.equals(item1))
+        assert(users.iterator.take(1).equals(item1))
       }
       testRepo.remove(item1.id).map { r =>
         assert(r.equals(item1))
       }
-      testRepo.getAll.map { users =>
+      testRepo.getAll.map(_.iterator.toList).map { users =>
         assert(users.isEmpty)
       }
     }
@@ -55,13 +57,13 @@ class BaseRepoMemImplTest extends AsyncFunSpec {
       val testRepo = getTestRepo
       testRepo.add(item1).map(r => assert(r.equals(item1)))
       testRepo.add(item2).map(r => assert(r.equals(item2)))
-      testRepo.getAll.map { users =>
+      testRepo.getAll.map(_.iterator.to(List)).map { users =>
         assert(users.length == 2)
       }
       testRepo.remove(item1.id).map { r =>
         assert(r.equals(item1))
       }
-      testRepo.getAll.map { users =>
+      testRepo.getAll.map(_.iterator.to(List)).map { users =>
         assert(users.length == 1)
         assert(users.head.equals(item2))
       }
