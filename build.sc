@@ -19,8 +19,6 @@ import mill.contrib.buildinfo.BuildInfo
 import $ivy.`com.goyeau::mill-git::0.2.3`
 import com.goyeau.mill.git.GitVersionedPublishModule
 
-//import mill.scalalib.publish.{Developer, License, PomSettings, VersionControl}
-
 import mill._
 import scalalib._
 import scalafmt._
@@ -90,6 +88,36 @@ object common extends Cross[Common]("2.12", "2.13")
 class Common(val crossScalaVersion: String) extends CrossScalaModule with BaseProjectModule
   with BuildInfo
   with GitVersionedPublishModule
+  {
+  import CommonConfig._
+  
+  def suffix = T { crossScalaVersion }
+  def bigSuffix = T { suffix().toUpperCase() }
+
+  def scalaVersion = CommonConfig.scalaVersion(crossScalaVersion)
+
+  def publishVersion = versionFile.currentVersion().toString
+
+  def pomSettings = CommonConfig.pomSettings
+
+  def ivyDeps =
+    ivyCommonDeps ++
+      ivyAkkaDeps ++
+      ivyCirceDeps // remove this
+
+  def scalacOptions = scalacCommonOptions
+
+  object test extends CrossScalaModuleTests with BaseTestModule {
+    def ivyDeps = ivyTestDeps ++
+      ivyAkkaTestDeps ++
+      ivyLogging
+  }
+}
+
+object commonCirce extends Cross[Common]("2.12", "2.13")
+class CommonCirce(val crossScalaVersion: String) extends CrossScalaModule with BaseProjectModule
+  with BuildInfo
+  with GitVersionedPublishModule
   //with ScalaPBModule
   {
   import CommonConfig._
@@ -99,23 +127,11 @@ class Common(val crossScalaVersion: String) extends CrossScalaModule with BasePr
 
   def scalaPBVersion = "0.10.10"
 
-  def scalaVersion = crossScalaVersion match {
-    case "2.13" => "2.13.8"
-    case "2.12" => "2.12.16"
-  }
+  def scalaVersion = CommonConfig.scalaVersion(crossScalaVersion)
 
   def publishVersion = versionFile.currentVersion().toString
 
-  def pomSettings = PomSettings(
-    description = "Appserver common libraries",
-    organization = "net.dodropin",
-    url = "https://github.com/cjdonaldson/appserver-common",
-    licenses = Seq(License.`Apache-2.0`),
-    versionControl = VersionControl.github("cjdonaldson", "appserver-common"),
-    developers = Seq(
-      Developer("cjdonaldson", "Charles Donaldson", "https://github.com/cjdonaldson")
-    )
-  )
+  def pomSettings = CommonConfig.pomSettings
 
   def buildInfoMembers: T[Map[String, String]] = T {
     Map[String, String](
@@ -138,11 +154,28 @@ class Common(val crossScalaVersion: String) extends CrossScalaModule with BasePr
 
   object test extends CrossScalaModuleTests with BaseTestModule {
     def ivyDeps = ivyTestDeps ++
-      ivyAkkaTestDeps
+      ivyAkkaTestDeps ++
+      ivyLogging
   }
 }
 
 object CommonConfig {
+
+  def pomSettings = PomSettings(
+    description = "Appserver common libraries",
+    organization = "net.dodropin",
+    url = "https://github.com/cjdonaldson/appserver-common",
+    licenses = Seq(License.`Apache-2.0`),
+    versionControl = VersionControl.github("cjdonaldson", "appserver-common"),
+    developers = Seq(
+      Developer("cjdonaldson", "Charles Donaldson", "https://github.com/cjdonaldson")
+    )
+  )
+
+  def scalaVersion(crossScalaVersion: String) = crossScalaVersion match {
+    case "2.13" => "2.13.8"
+    case "2.12" => "2.12.16"
+  }
 
   def ivyCommonDeps = {
     val guiceVersion = "5.1.0"

@@ -1,4 +1,4 @@
-package llc.dodropin.util
+package llc.dodropin.common.json
 
 import io.circe._
 import io.circe.parser._
@@ -11,7 +11,7 @@ import akka.http.scaladsl.unmarshalling.{FromEntityUnmarshaller, Unmarshaller}
 
 import scala.concurrent.Future
 
-case class JsonMarshalling[A]() {
+case class JsonCiriceMarshalling[A]() {
   // would like this, but
   // 'could not find lazy implicit value of type'
   // import io.circe.generic.semiauto._
