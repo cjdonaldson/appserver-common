@@ -100,10 +100,18 @@ class Common(val crossScalaVersion: String) extends CrossScalaModule with BasePr
 
   def pomSettings = CommonConfig.pomSettings
 
+  def buildInfoMembers: T[Map[String, String]] = T {
+    Map[String, String](
+      "name" -> "some name",
+      "version" -> publishVersion(),
+      "scalaVersion" -> crossScalaVersion,
+      "git" -> "tbr" //com.goyeau.mill.git.GitVersionModule.version
+    )
+  }
+
   def ivyDeps =
     ivyCommonDeps ++
-      ivyAkkaDeps ++
-      ivyCirceDeps // remove this
+      ivyAkkaDeps
 
   def scalacOptions = scalacCommonOptions
 
@@ -124,8 +132,6 @@ class CommonCirce(val crossScalaVersion: String) extends CrossScalaModule with B
   
   def suffix = T { crossScalaVersion }
   def bigSuffix = T { suffix().toUpperCase() }
-
-  def scalaPBVersion = "0.10.10"
 
   def scalaVersion = CommonConfig.scalaVersion(crossScalaVersion)
 
@@ -189,8 +195,8 @@ object CommonConfig {
     )
   }
 
-  val akkaVersion = "2.6.15"
-  val akkaHttpVersion = "10.2.1"
+  private val akkaVersion = "2.6.15"
+  private val akkaHttpVersion = "10.2.1"
   def ivyAkkaDeps = {
     val akkaCirceVersion = "1.29.1"
     val akkaCorsVersion = "1.1.0"
@@ -212,16 +218,10 @@ object CommonConfig {
     )
   }
 
-
   def ivyJwt = 
     Agg(
       ivy"com.github.jwt-scala::jwt-circe:9.1.1"
     )
-
-  // def anormDb =
-  //   Agg(
-  //     ivy"org.playframework.anorm::anorm:2.6.7"
-  //   )
 
   def ivyTestDeps = 
     Agg(
@@ -233,8 +233,8 @@ object CommonConfig {
     Agg(
       ivy"com.typesafe.akka::akka-http-testkit:$akkaHttpVersion",
       ivy"com.typesafe.akka::akka-actor-testkit-typed:$akkaVersion",
-      ivy"com.typesafe.akka::akka-stream-testkit:${CommonConfig.akkaVersion}",
-      ivy"com.typesafe.akka::akka-http-testkit:${CommonConfig.akkaHttpVersion}"
+      ivy"com.typesafe.akka::akka-stream-testkit:${akkaVersion}",
+      ivy"com.typesafe.akka::akka-http-testkit:${akkaHttpVersion}"
     )
 
   def ivyLogging = {
