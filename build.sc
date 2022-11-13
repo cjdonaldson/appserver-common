@@ -85,7 +85,8 @@ object versionFile extends VersionFileModule
 // override def scalaPBSources: Sources = T.sources { millOuterCtx.millSourcePath / 'protobuf }
 
 object common extends Cross[Common]("2.12", "2.13")
-class Common(val crossScalaVersion: String) extends CrossScalaModule with BaseProjectModule
+class Common(val crossScalaVersion: String) extends CrossScalaModule
+  with BaseProjectModule
   with BuildInfo
   with GitVersionedPublishModule
   {
@@ -122,11 +123,11 @@ class Common(val crossScalaVersion: String) extends CrossScalaModule with BasePr
   }
 }
 
-object commonCirce extends Cross[Common]("2.12", "2.13")
-class CommonCirce(val crossScalaVersion: String) extends CrossScalaModule with BaseProjectModule
+object commonCirce extends Cross[CommonCirce]("2.12", "2.13")
+class CommonCirce(val crossScalaVersion: String) extends CrossScalaModule
+  with BaseProjectModule
   with BuildInfo
   with GitVersionedPublishModule
-  //with ScalaPBModule
   {
   import CommonConfig._
   
@@ -136,6 +137,8 @@ class CommonCirce(val crossScalaVersion: String) extends CrossScalaModule with B
   def scalaVersion = CommonConfig.scalaVersion(crossScalaVersion)
 
   def publishVersion = versionFile.currentVersion().toString
+
+  override def artifactName = "common-circe"
 
   def pomSettings = CommonConfig.pomSettings
 
@@ -153,7 +156,8 @@ class CommonCirce(val crossScalaVersion: String) extends CrossScalaModule with B
       ivyAkkaDeps ++
       ivyCirceDeps ++
       Agg(
-        ivy"commons-codec:commons-codec:1.15"
+        ivy"commons-codec:commons-codec:1.15",
+        ivy"llc.dodropin::common:${publishVersion()}"
       )
 
   def scalacOptions = scalacCommonOptions
@@ -169,7 +173,7 @@ object CommonConfig {
 
   def pomSettings = PomSettings(
     description = "Appserver common libraries",
-    organization = "net.dodropin",
+    organization = "llc.dodropin",
     url = "https://github.com/cjdonaldson/appserver-common",
     licenses = Seq(License.`Apache-2.0`),
     versionControl = VersionControl.github("cjdonaldson", "appserver-common"),
