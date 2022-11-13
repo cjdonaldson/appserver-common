@@ -11,7 +11,7 @@ package llc.dodropin.common.persistence.repo
   */
 trait BaseRepo[ID, T <: RepoId[ID], E[_]] extends BaseRepoSyntax[T, E] {
 
-  log.info(s"repo init for $repoName")
+  log.info("repo init for {}", repoName)
 
   def repoName: String
 

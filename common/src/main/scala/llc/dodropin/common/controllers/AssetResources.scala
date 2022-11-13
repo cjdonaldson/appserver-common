@@ -32,5 +32,5 @@ final case class AssetResources(resourceRoot: String) extends Logging {
       .map(path => getFromDirectory(path + subdir))
       .getOrElse(getFromResourceDirectory(subdir))
 
-  log.info(s"resource location: ${rootDir.getOrElse("/")}")
+  log.info("resource location: {}", rootDir.getOrElse("/"))
 }

@@ -27,13 +27,13 @@ class Config() {
 
   private def pathFromEnv(path: String) =
     envVars.get(pathAsEnvVar(path)).map { v =>
-      log.info(s"$path from env $v")
+      log.info("{} from env {}", path, v)
       v
     }
 
   private def pathFromParams(path: String) =
     params.get(pathAsEnvVar(path)).map { v =>
-      log.info(s"$path from params $v")
+      log.info("{} from env {}", path, v)
       v
     }
 

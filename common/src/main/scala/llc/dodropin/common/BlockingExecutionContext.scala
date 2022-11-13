@@ -14,7 +14,7 @@ final case class BlockingExecutionContext() extends ExecutionContext with Loggin
   }
 
   def reportFailure(t: Throwable) = {
-    log.info(s"Execution context failure ${t.getMessage}")
+    log.warn("Execution context failure {}", t.getMessage)
     throw t
   }
 }

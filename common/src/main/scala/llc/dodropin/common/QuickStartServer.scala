@@ -20,17 +20,12 @@ case class QuickStartServer(
   // Needed for the Future and its methods flatMap/onComplete in the end
   implicit val executionContext: ExecutionContext = actorSystem.dispatcher
 
-  val serverBindingFuture: Future[ServerBinding] =
-    Http().newServerAt(host, port).bind(routes)
+  val serverBindingFuture: Future[ServerBinding] = Http().newServerAt(host, port).bindFlow(routes)
 
   Try {
-    actorSystem.log.info(
-      s"java version: ${System.getProperty("java.runtime.version")}"
-    )
-    actorSystem.log.info(s"scala version: ${util.Properties.versionString}")
-    actorSystem.log.info(
-      s"Server online at http://$host:$port/\nType quit to stop..."
-    )
+    actorSystem.log.info("java version: {}", System.getProperty("java.runtime.version"))
+    actorSystem.log.info("scala version: {}", util.Properties.versionString)
+    actorSystem.log.info("Server online at http://{}:{}/\nType quit to stop...", host, port)
 
     while (StdIn.readLine().trim != "quit") {}
 
@@ -40,7 +35,5 @@ case class QuickStartServer(
         done.failed.map(ex => actorSystem.log.error(ex, "Failed unbinding"))
         actorSystem.terminate()
       }
-  }.recover { case _: NullPointerException =>
-    actorSystem.log.info("StdIn is undefined. Running as daemon")
-  }
+  }.recover { case _: NullPointerException => actorSystem.log.info("StdIn is undefined. Running as daemon") }
 }

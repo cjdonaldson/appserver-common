@@ -30,7 +30,7 @@ object HealthCheckTest extends App {
     }
 
   log.info("HealthCheck start")
-  argsList.foreach(a => log.info(s"arg is: $a"))
+  argsList.foreach(a => log.info("arg is: {}", a))
 
   trait HealthStatus {
     val value: Int
@@ -53,7 +53,7 @@ object HealthCheckTest extends App {
     .getOrElse(Future.successful(Failed))
     .onComplete {
       case Success(value) =>
-        log.info(s"HealthCheck done: $value")
+        log.info("HealthCheck done: {}", value)
         sys.exit(value.value)
 
       case Failure(_) =>

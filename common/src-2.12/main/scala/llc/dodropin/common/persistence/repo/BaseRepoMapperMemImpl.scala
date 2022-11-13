@@ -14,10 +14,10 @@ trait BaseRepoMapperMemImpl[ID, T, E[_]] extends BaseRepoMapper[ID, T, E] with L
 
   def add(id: ID, t: T): E[Iterable[T]] =
     effectCollectionSuccess {
-      log.debug(s"mapper adding $id -> $t")
+      log.debug("mapper adding {} -> {}", id, t)
       repo(id) = t :: repo.get(id).getOrElse(Nil)
       val it = repo(id)
-      log.debug(s"mapper added ${!it.isEmpty} $id -> ${it}")
+      log.debug(s"mapper added ${it.nonEmpty} $id -> ${it}")
       it
     }
 

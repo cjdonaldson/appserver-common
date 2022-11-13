@@ -15,7 +15,7 @@ abstract case class BaseRepoMemImpl[ID, T <: RepoId[ID], E[_]](val repoName: Str
     toEffect(repo.get(id))("Nothing found")
 
   def add(t: T): E[T] = {
-    log.debug(s"Adding ${t}")
+    log.debug("Adding {}", t)
     repo.get(t.id) match {
       case Some(_) =>
         val exception = RepositoryException.idExists(repoName, t.id)
