@@ -41,13 +41,8 @@ object GuidMethod {
   object SecureRandom extends GuidMethod
 }
 
-case class Guid private (val value: String) //extends AnyVal
+case class Guid private (val value: String)
 {
-  // override def equals(that: Any): Boolean = that match {
-  //   case Guid(value) => this.value == value
-  //   case _ => false
-  // }
-
   override def toString = value
 }
 

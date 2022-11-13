@@ -11,7 +11,7 @@ import org.slf4j.helpers.NOPLogger
 import scala.concurrent.Future
 import scala.util.{Failure, Success}
 
-object HealthCheckTest extends App {
+object HealthCheckProbe extends App {
   implicit val system = ActorSystem(Behaviors.empty, "SingleRequest")
   implicit val executionContext = system.executionContext
 
