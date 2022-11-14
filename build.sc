@@ -165,6 +165,7 @@ class CommonCirce(val crossScalaVersion: String) extends CrossScalaModule
   object test extends CrossScalaModuleTests with BaseTestModule {
     def ivyDeps = ivyTestDeps ++
       ivyAkkaTestDeps ++
+      ivyCirceDeps ++
       ivyLogging
   }
 }
@@ -214,7 +215,7 @@ object CommonConfig {
   }
 
   def ivyCirceDeps = {
-    val circeVersion = "0.12.3"
+    val circeVersion = "0.14.1"
     Agg(
       ivy"io.circe::circe-core:$circeVersion",
       ivy"io.circe::circe-generic:$circeVersion",

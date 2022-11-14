@@ -41,8 +41,7 @@ object GuidMethod {
   object SecureRandom extends GuidMethod
 }
 
-case class Guid private (val value: String)
-{
+case class Guid private (val value: String) {
   override def toString = value
 }
 
