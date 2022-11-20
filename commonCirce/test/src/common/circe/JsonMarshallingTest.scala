@@ -2,7 +2,8 @@ package llc.dodropin.common
 
 import org.scalatest.funspec.AnyFunSpec
 
-import llc.dodropin.common.circe.JsonMarshallingImplicits
+// TODO: this test is expected to test this, but how to bulk import imports that require instantiation
+// import llc.dodropin.common.circe.JsonMarshallingImplicits._
 
 // how to move these into JsonMarshallingImplicits?
 import io.circe.generic.auto._
@@ -34,7 +35,7 @@ class JsonMarshallingTest extends AnyFunSpec {
       |]
       |""".stripMargin
 
-  val impl = JsonMarshallingImplicits[TestClass]()
+  // val impl = JsonMarshallingImplicits[TestClass]()
 
   describe("JsonMarshalling") {
     it("should create json from instance") {
