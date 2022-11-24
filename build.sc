@@ -151,6 +151,8 @@ class CommonCirce(val crossScalaVersion: String) extends CrossScalaModule
     )
   }
 
+  // def moduleDeps = Seq(common)
+
   def ivyDeps =
     ivyCommonDeps ++
       ivyAkkaDeps ++
