@@ -13,7 +13,7 @@ import akka.http.scaladsl.unmarshalling.FromResponseUnmarshaller
 import scala.concurrent.Future
 // import akka.http.scaladsl.model.HttpResponse
 
-object JsonMarshallingImplicits { //[A]()(implicit decoder: Decoder[A], encoder: Encoder[A]) {
+object JsonMarshallingImplicits { // [A]()(implicit decoder: Decoder[A], encoder: Encoder[A]) {
 // case class JsonMarshallingImplicits[A]()(implicit decoder: Decoder[A], encoder: Encoder[A]) {
   // private final val self = this
 
@@ -36,34 +36,34 @@ object JsonMarshallingImplicits { //[A]()(implicit decoder: Decoder[A], encoder:
   // implicit val jsonEncoder: Encoder[A] = deriveEncoder[A.type]
 
   // implicit class DecoderImplicits[A : Decoder](a: A) {
-    implicit def unmarshaller[A: Decoder]: FromEntityUnmarshaller[A] =
-      Unmarshaller.stringUnmarshaller
-        .forContentTypes(jsonContentTypes: _*)
-        .flatMap { ctx => mat => json =>
-          val _ = (ctx, mat)
-          // implicit val xx = implicitly[Decoder[A]]
-          decode(json).fold(Future.failed(_), Future.successful(_))
-        }
+  implicit def unmarshaller[A: Decoder]: FromEntityUnmarshaller[A] =
+    Unmarshaller.stringUnmarshaller
+      .forContentTypes(jsonContentTypes: _*)
+      .flatMap { ctx => mat => json =>
+        val _ = (ctx, mat)
+        // implicit val xx = implicitly[Decoder[A]]
+        decode(json).fold(Future.failed(_), Future.successful(_))
+      }
 
-    implicit def unmarshallerOpt[A: Decoder]: FromEntityUnmarshaller[Option[A]] =
-      Unmarshaller.stringUnmarshaller
-        .forContentTypes(jsonContentTypes: _*)
-        .flatMap { ctx => mat => json =>
-          val _ = (ctx, mat)
-          decode(json).fold(Future.failed(_), a => Future.successful(Some(a)))
-        }
+  implicit def unmarshallerOpt[A: Decoder]: FromEntityUnmarshaller[Option[A]] =
+    Unmarshaller.stringUnmarshaller
+      .forContentTypes(jsonContentTypes: _*)
+      .flatMap { ctx => mat => json =>
+        val _ = (ctx, mat)
+        decode(json).fold(Future.failed(_), a => Future.successful(Some(a)))
+      }
 
-    implicit def unmarshallerSeq[A: Decoder]: FromEntityUnmarshaller[Seq[A]] =
-      Unmarshaller.stringUnmarshaller
-        .forContentTypes(jsonContentTypes: _*)
-        .flatMap { ctx => mat => json =>
-          val _ = (ctx, mat)
-          decode(json).fold(Future.failed(_), a => Future.successful(Seq(a)))
-        }
+  implicit def unmarshallerSeq[A: Decoder]: FromEntityUnmarshaller[Seq[A]] =
+    Unmarshaller.stringUnmarshaller
+      .forContentTypes(jsonContentTypes: _*)
+      .flatMap { ctx => mat => json =>
+        val _ = (ctx, mat)
+        decode(json).fold(Future.failed(_), a => Future.successful(Seq(a)))
+      }
   // }
-    implicit def unmarshallerR[A: Decoder]: FromResponseUnmarshaller[A] =
-      // (res: HttpResponse) => res.entity
-      Unmarshaller.messageUnmarshallerFromEntityUnmarshaller
+  implicit def unmarshallerR[A: Decoder]: FromResponseUnmarshaller[A] =
+    // (res: HttpResponse) => res.entity
+    Unmarshaller.messageUnmarshallerFromEntityUnmarshaller
       // Unmarshaller.stringUnmarshaller
       //   .forContentTypes(jsonContentTypes: _*)
       //   .flatMap { ctx => mat => json =>
@@ -72,8 +72,8 @@ object JsonMarshallingImplicits { //[A]()(implicit decoder: Decoder[A], encoder:
       //     decode(json).fold(Future.failed(_), Future.successful(_))
       //   }
 
-    implicit def unmarshallerOptR[A: Decoder]: FromResponseUnmarshaller[Option[A]] =
-      Unmarshaller.messageUnmarshallerFromEntityUnmarshaller
+  implicit def unmarshallerOptR[A: Decoder]: FromResponseUnmarshaller[Option[A]] =
+    Unmarshaller.messageUnmarshallerFromEntityUnmarshaller
       // Unmarshaller.stringUnmarshaller
       //   .forContentTypes(jsonContentTypes: _*)
       //   .flatMap { ctx => mat => json =>
@@ -81,34 +81,33 @@ object JsonMarshallingImplicits { //[A]()(implicit decoder: Decoder[A], encoder:
       //     decode(json).fold(Future.failed(_), a => Future.successful(Some(a)))
       //   }
 
-    implicit def unmarshallerSeqR[A: Decoder]: FromResponseUnmarshaller[Seq[A]] =
-      Unmarshaller.messageUnmarshallerFromEntityUnmarshaller
+  implicit def unmarshallerSeqR[A: Decoder]: FromResponseUnmarshaller[Seq[A]] =
+    Unmarshaller.messageUnmarshallerFromEntityUnmarshaller
       // (response: HttpResponse) => unmarshaller[A].unmarshal(response.entity, ???)
       // Unmarshaller(response.entity).to[Seq[A]]//.FromResponseUnmarshaller
       // .stringUnmarshaller
       // .
-        // .forContentTypes(jsonContentTypes: _*)
-        // .flatMap { ctx => mat => json =>
-          // val _ = (ctx, mat)
-          // decode(json).fold(Future.failed(_), a => Future.successful(Seq(a)))
-        // }
+      // .forContentTypes(jsonContentTypes: _*)
+      // .flatMap { ctx => mat => json =>
+      // val _ = (ctx, mat)
+      // decode(json).fold(Future.failed(_), a => Future.successful(Seq(a)))
+      // }
 
+    // implicit class XxXEncoderImplicits[A : Encoder](a: A) {
+  implicit def marshaller[A: Encoder]: ToEntityMarshaller[A] =
+    Marshaller.withFixedContentType(`application/json`) { (a) =>
+      HttpEntity(jsonContentType, a.asJson.noSpaces)
+    }
 
-  // implicit class XxXEncoderImplicits[A : Encoder](a: A) {
-    implicit def marshaller[A: Encoder]: ToEntityMarshaller[A] =
-      Marshaller.withFixedContentType(`application/json`) { (a) =>
-        HttpEntity(jsonContentType, a.asJson.noSpaces)
-      }
+  implicit def marshallerOpt[A: Encoder]: ToEntityMarshaller[Option[A]] =
+    Marshaller.withFixedContentType(`application/json`) { (a: Option[A]) =>
+      HttpEntity(jsonContentType, a.asJson.noSpaces)
+    }
 
-    implicit def marshallerOpt[A: Encoder]: ToEntityMarshaller[Option[A]] =
-      Marshaller.withFixedContentType(`application/json`) { (a: Option[A]) =>
-        HttpEntity(jsonContentType, a.asJson.noSpaces)
-      }
-
-    implicit def marshallerSeq[A: Encoder]: ToEntityMarshaller[Seq[A]] =
-      Marshaller.withFixedContentType(`application/json`) { (a: Seq[A]) =>
-        HttpEntity(jsonContentType, a.asJson.noSpaces)
-      }
+  implicit def marshallerSeq[A: Encoder]: ToEntityMarshaller[Seq[A]] =
+    Marshaller.withFixedContentType(`application/json`) { (a: Seq[A]) =>
+      HttpEntity(jsonContentType, a.asJson.noSpaces)
+    }
   // }
 
   // object Implicits {

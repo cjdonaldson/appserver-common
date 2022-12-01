@@ -157,6 +157,7 @@ class CommonCirce(val crossScalaVersion: String) extends CrossScalaModule
     ivyCommonDeps ++
       ivyAkkaDeps ++
       ivyCirceDeps ++
+      ivyJwt ++
       Agg(
         ivy"commons-codec:commons-codec:1.15",
         ivy"llc.dodropin::common:${publishVersion()}"
@@ -232,8 +233,8 @@ object CommonConfig {
 
   def ivyTestDeps = 
     Agg(
-      ivy"org.scalactic::scalactic:3.1.1",
-      ivy"org.scalatest::scalatest:3.1.1"
+      ivy"org.scalactic::scalactic:3.2.14",
+      ivy"org.scalatest::scalatest:3.2.14"
     )
 
   def ivyAkkaTestDeps = 
