@@ -1,0 +1,16 @@
+#!/bin/sh
+
+mill clean
+#mill "common[2.12].scoverage.compile"
+#mill "common[2.12].test"
+#mill "common[2.12].scoverage.htmlReport"
+#
+#mill "common[2.13].scoverage.compile"
+#mill "common[2.13].test"
+#mill "common[2.13].scoverage.htmlReport"
+
+mill __.scoverage.compile
+mill __.test
+mill __.scoverage.htmlReport
+find . -type f -name 'index.html'  | ag scoverage | xargs -I {} open {}
+find . -type f -name 'index.html'  | ag scoverage

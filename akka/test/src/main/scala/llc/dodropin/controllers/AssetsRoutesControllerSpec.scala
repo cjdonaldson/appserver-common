@@ -1,4 +1,4 @@
-package llc.dodropin.common.controllers
+package llc.dodropin.common.akka.controllers
 
 import akka.http.scaladsl.model.StatusCodes
 import akka.http.scaladsl.testkit.ScalatestRouteTest
@@ -44,6 +44,14 @@ class AssetsRoutesControllerSpec extends AnyWordSpec with Matchers with Scalates
       Put("/image/test") ~> Route.seal(routes) ~> check {
         status shouldEqual StatusCodes.NotFound
         responseAs[String] shouldEqual "The requested resource could not be found."
+      }
+    }
+
+    "return a js for GET requests to /js/<file>" in {
+      Get("/js/javascript.js") ~> Route.seal(routes) ~> check {
+        handled shouldBe true
+        status shouldBe StatusCodes.OK
+        responseAs[String] shouldEqual "js test\n"
       }
     }
   }

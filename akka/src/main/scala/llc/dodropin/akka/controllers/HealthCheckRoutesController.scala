@@ -1,4 +1,4 @@
-package llc.dodropin.common.controllers
+package llc.dodropin.common.akka.controllers
 
 import llc.dodropin.common.Logging
 

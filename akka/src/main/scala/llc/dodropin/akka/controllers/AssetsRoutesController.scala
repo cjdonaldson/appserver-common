@@ -1,4 +1,4 @@
-package llc.dodropin.common.controllers
+package llc.dodropin.common.akka.controllers
 
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.Directives._
@@ -18,14 +18,14 @@ class AssetsRoutesController(resourceRoot: String) {
           resources.getResourceHtml
         }
       },
-      pathPrefix("js") {
-        encodeResponse {
-          resources.getResourceJavascript
-        }
-      },
       pathPrefix("images") {
         encodeResponse {
           resources.getResourceImage
+        }
+      },
+      pathPrefix("js") {
+        encodeResponse {
+          resources.getResourceJavascript
         }
       }
     )

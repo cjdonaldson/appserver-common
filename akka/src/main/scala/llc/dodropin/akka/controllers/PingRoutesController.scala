@@ -1,4 +1,4 @@
-package llc.dodropin.common.controllers
+package llc.dodropin.common.akka.controllers
 
 import akka.http.scaladsl.server.Route
 import akka.http.scaladsl.server.Directives._

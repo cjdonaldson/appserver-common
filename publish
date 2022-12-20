@@ -1,0 +1,6 @@
+#!/bin/bash
+
+mill -i 'common[2.12].publishLocal'
+mill -i 'common[2.13].publishLocal'
+mill -i __.publishLocal
+

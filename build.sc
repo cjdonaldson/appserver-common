@@ -19,13 +19,23 @@ import mill.contrib.buildinfo.BuildInfo
 import $ivy.`com.goyeau::mill-git::0.2.3`
 import com.goyeau.mill.git.GitVersionedPublishModule
 
+import $ivy.`de.tototec::de.tobiasroeser.mill.vcs.version::0.3.0`
+import de.tobiasroeser.mill.vcs.version.VcsVersion
+
 import mill._
 import scalalib._
 import scalafmt._
 import publish._
 
-trait BaseProjectModule extends ScalaModule with ScalafixModule with PublishModule with ScalafmtModule /*with ScoverageModule*/ {
-  trait BaseTestModule extends Tests with TestModule.ScalaTest with ScalafmtModule /*with ScoverageTests*/ {
+trait BaseProjectModule
+    extends ScalaModule
+    with ScalafixModule
+    with PublishModule
+    with ScalafmtModule
+    with ScoverageModule
+    with BuildInfo
+    with GitVersionedPublishModule {
+  trait BaseTestModule extends Tests with TestModule.ScalaTest with ScalafmtModule with ScoverageTests {
     def testFrameworks = Seq("org.scalatest.tools.Framework")
   }
 
@@ -35,45 +45,46 @@ trait BaseProjectModule extends ScalaModule with ScalafixModule with PublishModu
 
   def scalacCommonOptions =
     Seq(
-      "-deprecation",                      // Emit warning and location for usages of deprecated APIs.
-      "-encoding", "utf-8",                // Specify character encoding used by source files.
-      "-explaintypes",                     // Explain type errors in more detail.
-      "-feature",                          // Emit warning and location for usages of features that should be imported explicitly.
-      "-Xfatal-warnings",                  // Fail the compilation if there are any warnings.
-      // "-Xfuture",                          // Turn on future language features.
-      "-Xlint:adapted-args",               // Warn if an argument list is modified to match the receiver.
-      // "-Xlint:by-name-right-associative",  // By-name parameter of right associative operator.
-      "-Xlint:constant",                   // Evaluation of a constant arithmetic expression results in an error.
-      "-Xlint:delayedinit-select",         // Selecting member of DelayedInit.
-      "-Xlint:doc-detached",               // A Scaladoc comment appears to be detached from its element.
-      "-Xlint:inaccessible",               // Warn about inaccessible types in method signatures.
-      "-Xlint:infer-any",                  // Warn when a type argument is inferred to be `Any`.
-      "-Xlint:missing-interpolator",       // A string literal appears to be missing an interpolator id.
-      // "-Xlint:nullary-override",           // Warn when non-nullary `def f()' overrides nullary `def f'.
-      "-Xlint:nullary-unit",               // Warn when nullary methods return Unit.
-      "-Xlint:option-implicit",            // Option.apply used implicit view.
-      "-Xlint:package-object-classes",     // Class or object defined in package object.
-      "-Xlint:poly-implicit-overload",     // Parameterized overloaded implicit methods are not visible as view bounds.
-      "-Xlint:private-shadow",             // A private field (or class parameter) shadows a superclass field.
-      "-Xlint:stars-align",                // Pattern sequence wildcard must align with sequence component.
-      "-Xlint:type-parameter-shadow",      // A local type parameter shadows a type already in scope.
-      // "-Xlint:unsound-match",              // Pattern match may not be typesafe.
-      // "-Yno-adapted-args",                 // Do not adapt an argument list (either by inserting () or creating a tuple) to match the receiver.
-      // "-Ypartial-unification",             // Enable partial unification in type constructor inference
-      "-Ywarn-dead-code",                  // Warn when dead code is identified.
-      "-Ywarn-extra-implicit",             // Warn when more than one implicit parameter section is defined.
-      // "-Ywarn-inaccessible",               // Warn about inaccessible types in method signatures.
-      // "-Ywarn-infer-any",                  // Warn when a type argument is inferred to be `Any`.
-      // "-Ywarn-nullary-override",           // Warn when non-nullary `def f()' overrides nullary `def f'.
-      // "-Ywarn-nullary-unit",               // Warn when nullary methods return Unit.
-      "-Ywarn-numeric-widen",              // Warn when numerics are widened.
-      "-Ywarn-unused:implicits",           // Warn if an implicit parameter is unused.
-      "-Ywarn-unused:imports",             // Warn if an import selector is not referenced.
-      "-Ywarn-unused:locals",              // Warn if a local definition is unused.
-      //"-Ywarn-unused:params",              // Warn if a value parameter is unused.
-      "-Ywarn-unused:patvars",             // Warn if a variable bound in a pattern is unused.
-      "-Ywarn-unused:privates",            // Warn if a private member is unused.
-      "-Ywarn-value-discard"               // Warn when non-Unit expression results are unused.
+      "-deprecation", //                       Emit warning and location for usages of deprecated APIs.
+      "-encoding",
+      "utf-8", //                       Specify character encoding used by source files.
+      "-explaintypes", //                      Explain type errors in more detail.
+      "-feature", //                           Emit warning and location for usages of features that should be imported explicitly.
+      "-Xfatal-warnings", //                   Fail the compilation if there are any warnings.
+      // "-Xfuture", //                        Turn on future language features.
+      "-Xlint:adapted-args", //                Warn if an argument list is modified to match the receiver.
+      // "-Xlint:by-name-right-associative", //  By-name parameter of right associative operator.
+      "-Xlint:constant", //                    Evaluation of a constant arithmetic expression results in an error.
+      "-Xlint:delayedinit-select", //          Selecting member of DelayedInit.
+      "-Xlint:doc-detached", //                A Scaladoc comment appears to be detached from its element.
+      "-Xlint:inaccessible", //                Warn about inaccessible types in method signatures.
+      "-Xlint:infer-any", //                   Warn when a type argument is inferred to be `Any`.
+      "-Xlint:missing-interpolator", //        A string literal appears to be missing an interpolator id.
+      // "-Xlint:nullary-override", //           Warn when non-nullary `def f()' overrides nullary `def f'.
+      "-Xlint:nullary-unit", //                Warn when nullary methods return Unit.
+      "-Xlint:option-implicit", //             Option.apply used implicit view.
+      "-Xlint:package-object-classes", //      Class or object defined in package object.
+      "-Xlint:poly-implicit-overload", //      Parameterized overloaded implicit methods are not visible as view bounds.
+      "-Xlint:private-shadow", //              A private field (or class parameter) shadows a superclass field.
+      "-Xlint:stars-align", //                 Pattern sequence wildcard must align with sequence component.
+      "-Xlint:type-parameter-shadow", //       A local type parameter shadows a type already in scope.
+      // "-Xlint:unsound-match", //              Pattern match may not be typesafe.
+      // "-Yno-adapted-args", //                 Do not adapt an argument list (either by inserting () or creating a tuple) to match the receiver.
+      // "-Ypartial-unification", //             Enable partial unification in type constructor inference
+      "-Ywarn-dead-code", //                   Warn when dead code is identified.
+      "-Ywarn-extra-implicit", //              Warn when more than one implicit parameter section is defined.
+      // "-Ywarn-inaccessible", //               Warn about inaccessible types in method signatures.
+      // "-Ywarn-infer-any", //                  Warn when a type argument is inferred to be `Any`.
+      // "-Ywarn-nullary-override", //           Warn when non-nullary `def f()' overrides nullary `def f'.
+      // "-Ywarn-nullary-unit", //               Warn when nullary methods return Unit.
+      "-Ywarn-numeric-widen", //               Warn when numerics are widened.
+      "-Ywarn-unused:implicits", //            Warn if an implicit parameter is unused.
+      "-Ywarn-unused:imports", //              Warn if an import selector is not referenced.
+      "-Ywarn-unused:locals", //               Warn if a local definition is unused.
+      // "-Ywarn-unused:params", //              Warn if a value parameter is unused.
+      "-Ywarn-unused:patvars", //              Warn if a variable bound in a pattern is unused.
+      "-Ywarn-unused:privates", //             Warn if a private member is unused.
+      "-Ywarn-value-discard" //                Warn when non-Unit expression results are unused.
     )
 
   def scalacOptions = scalacCommonOptions
@@ -85,13 +96,9 @@ object versionFile extends VersionFileModule
 // override def scalaPBSources: Sources = T.sources { millOuterCtx.millSourcePath / 'protobuf }
 
 object common extends Cross[Common]("2.12", "2.13")
-class Common(val crossScalaVersion: String) extends CrossScalaModule
-  with BaseProjectModule
-  with BuildInfo
-  with GitVersionedPublishModule
-  {
+class Common(val crossScalaVersion: String) extends CrossScalaModule with BaseProjectModule {
   import CommonConfig._
-  
+
   def suffix = T { crossScalaVersion }
   def bigSuffix = T { suffix().toUpperCase() }
 
@@ -99,16 +106,18 @@ class Common(val crossScalaVersion: String) extends CrossScalaModule
 
   def publishVersion = versionFile.currentVersion().toString
 
-  def pomSettings = CommonConfig.pomSettings
+  def pomSettings = CommonConfig.pomSettings("core")
 
   def buildInfoMembers: T[Map[String, String]] = T {
     Map[String, String](
-      "name" -> "some name",
+      "name" -> "Common",
       "version" -> publishVersion(),
-      "scalaVersion" -> crossScalaVersion,
-      "git" -> "tbr" //com.goyeau.mill.git.GitVersionModule.version
+      "hash" -> VcsVersion.vcsState().format(),
+      "scalaVersion" -> crossScalaVersion
     )
   }
+
+  def buildInfoPackageName: Option[String] = Some("llc.dodropin.common")
 
   def ivyDeps =
     ivyCommonDeps ++
@@ -123,14 +132,102 @@ class Common(val crossScalaVersion: String) extends CrossScalaModule
   }
 }
 
-object commonCirce extends Cross[CommonCirce]("2.12", "2.13")
-class CommonCirce(val crossScalaVersion: String) extends CrossScalaModule
-  with BaseProjectModule
-  with BuildInfo
-  with GitVersionedPublishModule
-  {
+object akka extends Cross[Akka]("2.12", "2.13")
+class Akka(val crossScalaVersion: String) extends CrossScalaModule with BaseProjectModule {
   import CommonConfig._
-  
+
+  def suffix = T { crossScalaVersion }
+  def bigSuffix = T { suffix().toUpperCase() }
+
+  def scalaVersion = CommonConfig.scalaVersion(crossScalaVersion)
+
+  def publishVersion = versionFile.currentVersion().toString
+
+  override def artifactName = "common-akka"
+
+  // def moduleDeps = Seq(common)
+
+  def pomSettings = CommonConfig.pomSettings("akka based components")
+
+  def buildInfoMembers: T[Map[String, String]] = T {
+    Map[String, String](
+      "name" -> "Akka",
+      "version" -> publishVersion(),
+      "hash" -> VcsVersion.vcsState().format(),
+      "scalaVersion" -> crossScalaVersion
+    )
+  }
+
+  def buildInfoPackageName: Option[String] = Some("llc.dodropin.common.akka")
+
+  def ivyDeps =
+    ivyCommonDeps ++
+      ivyAkkaDeps ++
+      ivyDoDropInCommon(publishVersion())
+
+  def scalacOptions = scalacCommonOptions
+
+  object test extends CrossScalaModuleTests with BaseTestModule {
+    def ivyDeps = ivyTestDeps ++
+      ivyAkkaTestDeps ++
+      ivyLogging
+  }
+
+}
+
+object http4s extends Cross[Http4s]("2.12", "2.13")
+class Http4s(val crossScalaVersion: String) extends CrossScalaModule with BaseProjectModule {
+  import CommonConfig._
+
+  def suffix = T { crossScalaVersion }
+  def bigSuffix = T { suffix().toUpperCase() }
+
+  def scalaVersion = CommonConfig.scalaVersion(crossScalaVersion)
+
+  def publishVersion = versionFile.currentVersion().toString
+
+  override def artifactName = "common-http4s"
+
+  def pomSettings = CommonConfig.pomSettings("http4s based components")
+
+  def buildInfoMembers: T[Map[String, String]] = T {
+    Map[String, String](
+      "name" -> "http4s",
+      "version" -> publishVersion(),
+      "hash" -> VcsVersion.vcsState().format(),
+      "scalaVersion" -> crossScalaVersion
+    )
+  }
+
+  def buildInfoPackageName: Option[String] = Some("llc.dodropin.common.http4s")
+
+  def ivyDeps =
+    ivyCommonDeps ++
+      ivyHttp4sDeps ++
+      ivyDoDropInCommon(publishVersion())
+
+  def ivyHttp4sDeps = {
+    def http4sVersion = "0.23.10"
+    Agg(
+      ivy"org.http4s::http4s-dsl:$http4sVersion",
+      ivy"org.http4s::http4s-blaze-server:$http4sVersion",
+      ivy"org.http4s::http4s-core:$http4sVersion",
+      ivy"org.http4s::http4s-circe:$http4sVersion"
+    )
+  }
+
+  def scalacOptions = scalacCommonOptions
+
+  object test extends CrossScalaModuleTests with BaseTestModule {
+    def ivyDeps = ivyTestDeps ++
+      ivyLogging
+  }
+}
+
+object circe extends Cross[Circe]("2.12", "2.13")
+class Circe(val crossScalaVersion: String) extends CrossScalaModule with BaseProjectModule {
+  import CommonConfig._
+
   def suffix = T { crossScalaVersion }
   def bigSuffix = T { suffix().toUpperCase() }
 
@@ -140,43 +237,48 @@ class CommonCirce(val crossScalaVersion: String) extends CrossScalaModule
 
   override def artifactName = "common-circe"
 
-  def pomSettings = CommonConfig.pomSettings
+  def pomSettings = CommonConfig.pomSettings("circe")
 
   def buildInfoMembers: T[Map[String, String]] = T {
     Map[String, String](
-      "name" -> "some name",
+      "name" -> "circe",
       "version" -> publishVersion(),
-      "scalaVersion" -> crossScalaVersion,
-      "git" -> "tbr" //com.goyeau.mill.git.GitVersionModule.version
+      "hash" -> VcsVersion.vcsState().format(),
+      "scalaVersion" -> crossScalaVersion
     )
   }
 
-  // def moduleDeps = Seq(common)
+  def buildInfoPackageName: Option[String] = Some("llc.dodropin.common.circe")
 
   def ivyDeps =
     ivyCommonDeps ++
       ivyAkkaDeps ++
       ivyCirceDeps ++
       ivyJwt ++
-      Agg(
-        ivy"commons-codec:commons-codec:1.15",
-        ivy"llc.dodropin::common:${publishVersion()}"
-      )
+      ivyDoDropInCommon(publishVersion())
 
   def scalacOptions = scalacCommonOptions
 
   object test extends CrossScalaModuleTests with BaseTestModule {
     def ivyDeps = ivyTestDeps ++
-      ivyAkkaTestDeps ++
       ivyCirceDeps ++
       ivyLogging
+  }
+
+  def ivyCirceDeps = {
+    val circeVersion = "0.14.1"
+    Agg(
+      ivy"io.circe::circe-core:$circeVersion",
+      ivy"io.circe::circe-generic:$circeVersion",
+      ivy"io.circe::circe-parser:$circeVersion"
+    )
   }
 }
 
 object CommonConfig {
 
-  def pomSettings = PomSettings(
-    description = "Appserver common libraries",
+  def pomSettings(subDescription: String) = PomSettings(
+    description = s"Appserver common libraries - $subDescription",
     organization = "llc.dodropin",
     url = "https://github.com/cjdonaldson/appserver-common",
     licenses = Seq(License.`Apache-2.0`),
@@ -217,32 +319,22 @@ object CommonConfig {
     )
   }
 
-  def ivyCirceDeps = {
-    val circeVersion = "0.14.1"
+  def ivyAkkaTestDeps =
     Agg(
-      ivy"io.circe::circe-core:$circeVersion",
-      ivy"io.circe::circe-generic:$circeVersion",
-      ivy"io.circe::circe-parser:$circeVersion"
+      ivy"com.typesafe.akka::akka-actor-testkit-typed:$akkaVersion",
+      ivy"com.typesafe.akka::akka-http-testkit:$akkaHttpVersion",
+      ivy"com.typesafe.akka::akka-stream-testkit:$akkaVersion"
     )
-  }
 
-  def ivyJwt = 
+  def ivyJwt =
     Agg(
       ivy"com.github.jwt-scala::jwt-circe:9.1.1"
     )
 
-  def ivyTestDeps = 
+  def ivyTestDeps =
     Agg(
       ivy"org.scalactic::scalactic:3.2.14",
       ivy"org.scalatest::scalatest:3.2.14"
-    )
-
-  def ivyAkkaTestDeps = 
-    Agg(
-      ivy"com.typesafe.akka::akka-http-testkit:$akkaHttpVersion",
-      ivy"com.typesafe.akka::akka-actor-testkit-typed:$akkaVersion",
-      ivy"com.typesafe.akka::akka-stream-testkit:${akkaVersion}",
-      ivy"com.typesafe.akka::akka-http-testkit:${akkaHttpVersion}"
     )
 
   def ivyLogging = {
@@ -255,19 +347,15 @@ object CommonConfig {
     )
   }
 
-  def ivyEndpoints4s = {
-    val endpointsVersion = "1.8.0"
-    Agg(
-      ivy"org.endpoints4s::algebra:$endpointsVersion",
-      ivy"org.endpoints4s::json-schema-generic:$endpointsVersion",
-      ivy"org.endpoints4s::json-schema-circe:2.2.0",
-      ivy"org.endpoints4s::akka-http-server:6.0.0"
-    )
-  }
-
-  def ivyInject = 
+  def ivyInject =
     Agg(
       ivy"javax.inject:javax.inject:1"
     )
+
+  def ivyDoDropInCommon(version: String) = {
+    Agg(
+      ivy"llc.dodropin::common:${version}"
+    )
+  }
 
 }
